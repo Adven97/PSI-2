@@ -34,7 +34,6 @@ def chose_best(lista):
 
     return list(set(results))
 
-
 def to_binary(num):
     binar = bin(num)
     bin2 = binar[2:]
@@ -43,7 +42,9 @@ def to_binary(num):
         bin2 =str(0)+bin2
     return bin2
 
-for x in range(0, scope):
+# generating start poulation of 'scope' chromosoms
+
+for x in range(scope):
     rand = random.randint(1,amount)
     chromosom = to_binary(rand)
     chromosoms.append(chromosom)
@@ -54,10 +55,9 @@ for x in range(0, scope):
 
     print(chromosom+' (' + str(rand) +')' +' - '+ str(func(rand)))
 
-# print(list_of_chroms)
-# print(scores) 
 print()
 
+# generating percent values
 for score in scores:
     percent = percentage(score, sum(scores) )
     percentes.append(percent)
@@ -70,8 +70,9 @@ for per in percentes:
         tm.append(truncate(per))
     else:
         tm.append(truncate(per) + tm[-1])
-print(tm)
+# print(tm)
 
+# przedzialy
 pairs=[]  # to tak naprawde konkretne przedziały
 lasts=[]
 for part in tm:
@@ -87,7 +88,8 @@ for part in tm:
     pairs.append(pair)    
 
 print(pairs)
-    
+
+#losowanie   
 losowe=[]    
 for x in range(8):
     rnd = random.random()*100  ### yes, it is float
@@ -97,17 +99,12 @@ for x in range(8):
 
 print()
 print(losowe)
-ocurrences=count_ocs(losowe)
-print(ocurrences)
+print(count_ocs(losowe))
 print()
 cb_best = chose_best(losowe)
-# cb_indx = chose_best(ocurrences)[1]
 print(cb_best)
-# print(cb_indx)
 
-# print(chromosoms[cb_indx[0]])
-# print(chromosoms[cb_indx[1]])
-
+#krzyzowanie
 def crossing(chrom1, chrom2):
     wynik=""
     wynik2=""
@@ -127,10 +124,6 @@ c1 = crossing(cb_best[0], cb_best[1])[0]
 c2 = crossing(cb_best[0], cb_best[1])[1]
 print(c1 + " - "+str(int(c1, 2)))
 print(c2 + " - "+str(int(c2, 2)))
-
-
-
-
 
 
 
