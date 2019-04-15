@@ -3,13 +3,14 @@ from itertools import groupby
 
 amount = 127
 scope =8
+bits=7
 
 list_of_chroms=[]
 list_of_dec=[]
 scores=[]
 percentes=[]
-
 chromosoms=[]
+
 def truncate(n):
     return int(n * 10000) / 10000
 
@@ -27,24 +28,17 @@ def count_ocs(lista):
     return sum    
 
 def chose_best(lista):
-    best_pair=[]
-    indexes=[]
-    tmp = lista
-    tmp = sorted(tmp)
-    tmp = list(reversed(tmp))
-    best_pair.append(tmp[0])
-    best_pair.append(tmp[1])
+    results=[]
+    for x in lista:
+        results.append(list_of_chroms[x])
 
-    indexes.append(lista.index(tmp[0]))
-    indexes.append(lista.index(tmp[1]))
-
-    return best_pair, indexes
+    return list(set(results))
 
 
 def to_binary(num):
     binar = bin(num)
     bin2 = binar[2:]
-    while len(bin2) < 7:
+    while len(bin2) < bits:
 
         bin2 =str(0)+bin2
     return bin2
@@ -106,19 +100,19 @@ print(losowe)
 ocurrences=count_ocs(losowe)
 print(ocurrences)
 print()
-cb_best = chose_best(ocurrences)[0]
-cb_indx = chose_best(ocurrences)[1]
+cb_best = chose_best(losowe)
+# cb_indx = chose_best(ocurrences)[1]
 print(cb_best)
-print(cb_indx)
+# print(cb_indx)
 
-print(chromosoms[cb_indx[0]])
-print(chromosoms[cb_indx[1]])
+# print(chromosoms[cb_indx[0]])
+# print(chromosoms[cb_indx[1]])
 
 def crossing(chrom1, chrom2):
     wynik=""
     wynik2=""
     rnd = random.choice([1,2,3,4,5,6])  # picking locus
-    for c in range(7):
+    for c in range(bits):
         if c < rnd-1:
             wynik+= chrom1[c]
             wynik2+= chrom2[c]
@@ -128,11 +122,13 @@ def crossing(chrom1, chrom2):
     return  [wynik,wynik2]
 
 print('-- -- -- --')
-c1 = crossing(chromosoms[cb_indx[0]], chromosoms[cb_indx[1]])[0]
-c2 = crossing(chromosoms[cb_indx[0]], chromosoms[cb_indx[1]])[1]
+# for i in range(len(cb_best)):
+c1 = crossing(cb_best[0], cb_best[1])[0]
+c2 = crossing(cb_best[0], cb_best[1])[1]
+print(c1 + " - "+str(int(c1, 2)))
+print(c2 + " - "+str(int(c2, 2)))
 
-print(c1 +" - "+str(int(c1,2)))
-print(c2 +" - "+str(int(c2,2)))
+
 
 
 
