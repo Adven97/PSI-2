@@ -5,7 +5,6 @@ amount = 127
 scope =8
 bits=7
 
-# list_of_chroms=[]
 list_of_dec=[]
 scores=[]
 percentes=[]
@@ -32,14 +31,12 @@ def chose_best(lista, list_of_chroms):
     results=[]
     for x in lista:
         results.append(list_of_chroms[x])
-
     return results
 
 def to_binary(num):
     binar = bin(num)
     bin2 = binar[2:]
     while len(bin2) < bits:
-
         bin2 =str(0)+bin2
     return bin2
 
@@ -77,12 +74,27 @@ def crossing(chrom1, chrom2):
             wynik2 += chrom1[c]
     return [wynik, wynik2]
 
+def mutate(chroms):
+    res=[]
+    for chrom in chroms:
+        x = random.choice([0,1,2,3,4,5])
+        if x == 5:
+            replace = random.choice([0,1,2,3,4,5,6])
+            teem = list(chrom)
+            if teem[replace]=='0':
+                teem[replace] = '1'
+            else:
+                teem[replace] = '0'
+            chrom= ''.join(teem)
+        res.append(chrom)
+    return res
+
 
 def perform():
 
     list_of_chroms = generate_init()
     init(list_of_chroms)
-    for i in range(10):
+    for iii in range(200):
         scores = init(list_of_chroms)
         for score in scores:
             percent = percentage(score, sum(scores) )
@@ -118,7 +130,7 @@ def perform():
         #losowanie   
         losowe=[]    
         for x in range(8):
-            rnd = random.random()*100  ### yes, it is float
+            rnd = random.uniform(0,100)  ### yes, it is float
             for pair in pairs:
                 if rnd >pair[0] and rnd <=pair[1]:
                     losowe.append(pairs.index(pair))
@@ -128,8 +140,12 @@ def perform():
         # print(count_ocs(losowe))
         print()
         cb_best = chose_best(losowe, list_of_chroms)
-        # print(cb_best)
+        print('przed tasowaniem: '+str(cb_best))
+        print('przed tasowaniem: '+str(losowe))
+        for i in range(15):
+            random.shuffle(cb_best)
         
+        print('po tasowaniu: '+str(cb_best))
 
         print('-- -- -- --')
 
@@ -148,15 +164,22 @@ def perform():
             new_gen.append(c1)
             new_gen.append(c2)
         print(new_gen)
+        print('mutatio n!!!')
+        new_gen=mutate(new_gen)
+        print(new_gen)
         list_of_chroms = new_gen
         init(list_of_chroms)
-        print("-----------  ----------- end of gen "+str(i+1)+' ----------- ----------')
-
+        print("-----------  ----------- end of gen "+str(iii+1)+' ----------- ----------')
 
 
 perform()
 
+def print_example():
+    for a in range(10):
+        for x in range(8):
+                    print(random.uniform(0,100))
+        print()           
 
-
+# print_example()
     
     
