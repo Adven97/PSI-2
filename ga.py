@@ -1,31 +1,14 @@
 import random
 from itertools import groupby
 
-amount = 127
 scope =8
 bits=7
-
-list_of_dec=[]
-scores=[]
-percentes=[]
-
-
-def truncate(n):
-    return int(n * 10000) / 10000
 
 def percentage(part, whole):
     return (part / whole) * 100.00
 
 def func(arg):
-    fun =2*(arg**2 + 1)
-    return fun
-
-def count_ocs(lista):
-    sum=[]
-    for s in range(scope):
-        sum.append(lista.count(s))
-    return sum    
-
+    return 2*(arg**2 + 1)
 
 def chose_best(lista, list_of_chroms):
     results=[]
@@ -41,15 +24,15 @@ def to_binary(num):
     return bin2
 
 # generating start poulation of 'scope' chromosoms
-def generate_init():
+def generate_chromosoms():
     chromosoms=[]
     for x in range(scope):
-        rand = random.randint(1,amount)
+        rand = random.randint(1,127)
         chromosom = to_binary(rand)
         chromosoms.append(chromosom)
     return chromosoms
 
-def init(chroms):
+def init(chroms, list_of_dec):
     scrs=[]
     for x in chroms:
         ran = int(x, 2)
@@ -59,8 +42,8 @@ def init(chroms):
         print(x+' (' + str(ran) +')' +' - '+ str(func(ran)))
     print()
     return scrs
-#krzyzowanie
 
+#krzyzowanie
 def crossing(chrom1, chrom2):
     wynik = ""
     wynik2 = ""
@@ -92,23 +75,25 @@ def mutate(chroms):
 
 def perform():
 
-    list_of_chroms = generate_init()
-    init(list_of_chroms)
-    for iii in range(200):
-        scores = init(list_of_chroms)
+    list_of_chroms = generate_chromosoms()
+    init(list_of_chroms,[])
+    for iii in range(100):
+        scores=[]
+        percentes=[]
+
+        scores = init(list_of_chroms, [])
         for score in scores:
-            percent = percentage(score, sum(scores) )
+            percent = percentage(score, sum(scores) ) # gets percentage value of each score (function value)
             percentes.append(percent)
             print(percent)
 
         print()
         tm=[]
-        for per in percentes:
+        for per in percentes:                       ### make inteval (przedzial)
             if not tm:
-                tm.append(truncate(per))
+                tm.append(round(per, 4))
             else:
-                tm.append(truncate(per) + tm[-1])
-        # print(tm)
+                tm.append(round(per, 4) + tm[-1])
 
         # przedzialy
         pairs=[]  # to tak naprawde konkretne przedziały
@@ -125,8 +110,6 @@ def perform():
             lasts.append(part)    
             pairs.append(pair)    
 
-        # print(pairs)
-
         #losowanie   
         losowe=[]    
         for x in range(8):
@@ -136,9 +119,6 @@ def perform():
                     losowe.append(pairs.index(pair))
 
         print()
-        # print(losowe)
-        # print(count_ocs(losowe))
-        print()
         cb_best = chose_best(losowe, list_of_chroms)
         print('przed tasowaniem: '+str(cb_best))
         print('przed tasowaniem: '+str(losowe))
@@ -146,40 +126,20 @@ def perform():
             random.shuffle(cb_best)
         
         print('po tasowaniu: '+str(cb_best))
-
         print('-- -- -- --')
 
-
-        # # for i in range(len(cb_best)):
-        # c1 = crossing(cb_best[0], cb_best[1])[0]
-        # c2 = crossing(cb_best[0], cb_best[1])[1]
-        # print(c1 + " - "+str(int(c1, 2)))
-        # print(c2 + " - "+str(int(c2, 2)))
         new_gen=[]
         for x in [0, 2, 4, 6]:
             c1 = crossing(cb_best[x], cb_best[x+1])[0]
             c2 = crossing(cb_best[x], cb_best[x+1])[1]
-            # print(c1 + " - "+str(int(c1, 2)))
-            # print(c2 + " - "+str(int(c2, 2)))
             new_gen.append(c1)
             new_gen.append(c2)
         print(new_gen)
-        print('mutatio n!!!')
+        print('after mutation: ')
         new_gen=mutate(new_gen)
         print(new_gen)
         list_of_chroms = new_gen
-        init(list_of_chroms)
+        init(list_of_chroms, [])
         print("-----------  ----------- end of gen "+str(iii+1)+' ----------- ----------')
 
-
 perform()
-
-def print_example():
-    for a in range(10):
-        for x in range(8):
-                    print(random.uniform(0,100))
-        print()           
-
-# print_example()
-    
-    
