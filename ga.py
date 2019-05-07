@@ -1,5 +1,4 @@
 import random
-from itertools import groupby
 
 scope =8
 bits=7
@@ -16,29 +15,27 @@ def to_binary(num):
     while len(binar) < bits:
         binar =str(0)+binar
     return binar
-# print(to_binary(0))
+
 # generating start poulation of 'scope' chromosoms
 def generate_chromosoms():
     chromosoms=[]
     for x in range(scope):
         rand = random.randint(1,127)
-        chromosom = to_binary(rand)
-        chromosoms.append(chromosom)
+        chromosoms.append(to_binary(rand))
     return chromosoms
 
 def init(chroms):
-    scrs=[]
-    for x in chroms:
-        ran = int(x, 2)
-        scrs.append(func(ran))
-        print(x+' (' + str(ran) +')' +' - '+ str(func(ran)))
+    scores=[]
+    for chrom in chroms:
+        ran = int(chrom, 2)
+        scores.append(func(ran))
+        print(chrom +' (' + str(ran) + ')' + ' - ' + str(func(ran)))
     print()
-    return scrs
+    return scores
 
 #krzyzowanie
 def crossing(chrom1, chrom2):
-    wynik = ""
-    wynik2 = ""
+    wynik, wynik2 = "",""
     rnd = random.choice([1, 2, 3, 4, 5, 6, 7])  # picking locus
     for c in range(bits):
         if c <= rnd-1:
@@ -49,11 +46,10 @@ def crossing(chrom1, chrom2):
             wynik2 += chrom1[c]
     return [wynik, wynik2]
 
-def mutate(chroms):
+def mutate(chroms, probability):
     res=[]
     for chrom in chroms:
-        x = random.choice([0,1,2,3,4,5])
-        if x == 5:
+        if random.randint(1, probability) == 1:
             replace = random.choice([0,1,2,3,4,5,6])
             teem = list(chrom)
             if teem[replace]=='0':
@@ -128,7 +124,7 @@ def perform():
             new_gen.append(c2)
         print(new_gen)
         print('after mutation: ')
-        new_gen=mutate(new_gen)
+        new_gen=mutate(new_gen,9)
         print(new_gen)
         list_of_chroms = new_gen
         init(list_of_chroms)
