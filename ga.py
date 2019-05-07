@@ -10,19 +10,13 @@ def percentage(part, whole):
 def func(arg):
     return 2*(arg**2 + 1)
 
-def chose_best(lista, list_of_chroms):
-    results=[]
-    for x in lista:
-        results.append(list_of_chroms[x])
-    return results
-
 def to_binary(num):
     binar = bin(num)
-    bin2 = binar[2:]
-    while len(bin2) < bits:
-        bin2 =str(0)+bin2
-    return bin2
-
+    binar = binar[2:]
+    while len(binar) < bits:
+        binar =str(0)+binar
+    return binar
+# print(to_binary(0))
 # generating start poulation of 'scope' chromosoms
 def generate_chromosoms():
     chromosoms=[]
@@ -32,13 +26,11 @@ def generate_chromosoms():
         chromosoms.append(chromosom)
     return chromosoms
 
-def init(chroms, list_of_dec):
+def init(chroms):
     scrs=[]
     for x in chroms:
         ran = int(x, 2)
-        list_of_dec.append(ran)
         scrs.append(func(ran))
-
         print(x+' (' + str(ran) +')' +' - '+ str(func(ran)))
     print()
     return scrs
@@ -76,12 +68,12 @@ def mutate(chroms):
 def perform():
 
     list_of_chroms = generate_chromosoms()
-    init(list_of_chroms,[])
+    init(list_of_chroms)
     for iii in range(100):
         scores=[]
         percentes=[]
 
-        scores = init(list_of_chroms, [])
+        scores = init(list_of_chroms)
         for score in scores:
             percent = percentage(score, sum(scores) ) # gets percentage value of each score (function value)
             percentes.append(percent)
@@ -89,7 +81,7 @@ def perform():
 
         print()
         tm=[]
-        for per in percentes:                       ### make inteval (przedzial)
+        for per in percentes:                       ### make values to intervals (przedzialy)
             if not tm:
                 tm.append(round(per, 4))
             else:
@@ -97,7 +89,7 @@ def perform():
 
         # przedzialy
         pairs=[]  # to tak naprawde konkretne przedziały
-        lasts=[]
+        lasts=[]  # temp list of last values
         for part in tm:
             pair=[]
             if not pairs:
@@ -116,22 +108,22 @@ def perform():
             rnd = random.uniform(0,100)  ### yes, it is float
             for pair in pairs:
                 if rnd >pair[0] and rnd <=pair[1]:
-                    losowe.append(pairs.index(pair))
+                    inx = pairs.index(pair)
+                    losowe.append(list_of_chroms[inx])
 
         print()
-        cb_best = chose_best(losowe, list_of_chroms)
-        print('przed tasowaniem: '+str(cb_best))
+        print('przed tasowaniem: '+str(losowe))
         print('przed tasowaniem: '+str(losowe))
         for i in range(15):
-            random.shuffle(cb_best)
+            random.shuffle(losowe)
         
-        print('po tasowaniu: '+str(cb_best))
+        print('po tasowaniu: '+str(losowe))
         print('-- -- -- --')
 
         new_gen=[]
         for x in [0, 2, 4, 6]:
-            c1 = crossing(cb_best[x], cb_best[x+1])[0]
-            c2 = crossing(cb_best[x], cb_best[x+1])[1]
+            c1 = crossing(losowe[x], losowe[x+1])[0]
+            c2 = crossing(losowe[x], losowe[x+1])[1]
             new_gen.append(c1)
             new_gen.append(c2)
         print(new_gen)
@@ -139,7 +131,7 @@ def perform():
         new_gen=mutate(new_gen)
         print(new_gen)
         list_of_chroms = new_gen
-        init(list_of_chroms, [])
-        print("-----------  ----------- end of gen "+str(iii+1)+' ----------- ----------')
+        init(list_of_chroms)
+        print(f"---------------------- end of gen {str(iii+1)} ----------------------")
 
 perform()
